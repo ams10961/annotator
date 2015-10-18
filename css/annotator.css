@@ -92,12 +92,20 @@
 -------------------------------------------------------------------- */
 
 .annotator-adder {
-	margin-top: -48px;
+	margin-top: 24px;
 	margin-left: -24px;
 	width: 48px;
 	height: 48px;
 	background-position: left top;
 }
+
+/* .annotator-adder { */
+/* 	margin-top: -48px; */
+/* 	margin-left: -24px; */
+/* 	width: 48px; */
+/* 	height: 48px; */
+/* 	background-position: left top; */
+/* } */
 
 .annotator-adder:hover {
 	background-position: center top;
@@ -168,6 +176,9 @@
 	list-style: none;
 }
 
+/*
+ams10961:suppress the widget arrow element
+
 .annotator-widget:after {
 	content: "";
 	display: block;
@@ -178,6 +189,7 @@
 	bottom: -10px;
 	left: 8px;
 }
+*/
 
 .annotator-invert-x .annotator-widget:after {
 	left: auto;
@@ -232,7 +244,7 @@
 	padding-top: 12px;
 	padding-bottom: 12px;
 	color: rgb(60, 60, 60);
-	font-size: 13px;
+	font-size: 16px;   // ams10961: from 13px to avoid mobile zooming
 	font-style: italic;
 	line-height: 1.3;
 	border-top: none;
@@ -260,8 +272,8 @@
 .annotator-viewer .annotator-controls a {
 	cursor: pointer;
 	display: inline-block;
-	width: 13px;
-	height: 13px;
+	width: 16px;
+	height: 16px;
 	margin-left: 2px;
 	border: none;
 	opacity: 0.2;
@@ -334,7 +346,7 @@
 }
 
 .annotator-editor .annotator-item textarea::-webkit-scrollbar-track-piece {
-	margin: 13px 0 3px;
+	margin: 16px 0 3px;
 	background-color: #e5e5e5;
 	-webkit-border-radius: 4px;
 }
@@ -431,6 +443,11 @@
 	-moz-border-radius: 0 0 5px 5px;
 	-o-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
+}
+
+/* ams10961:added */
+.annotator-editor .annotator-controls .annotator-delete {
+	float:left;
 }
 
 .annotator-editor.annotator-invert-y .annotator-controls {

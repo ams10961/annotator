@@ -141,12 +141,18 @@ var Viewer = exports.Viewer = Widget.extend({
         }
 
         this.element
+            /* ams10961:click to edit */
+        	.on("click." + NS, function (e) {
+        		self._onEditClick(e);
+        	})        
+/* ams10961:suppressed
             .on("click." + NS, '.annotator-edit', function (e) {
                 self._onEditClick(e);
             })
             .on("click." + NS, '.annotator-delete', function (e) {
                 self._onDeleteClick(e);
             })
+*/
             .on("mouseenter." + NS, function () {
                 self._clearHideTimer();
             })
@@ -336,6 +342,7 @@ var Viewer = exports.Viewer = Widget.extend({
     // event - An Event object.
     //
     // Returns nothing.
+    /* ams10961: moved to editor
     _onDeleteClick: function (event) {
         var item = $(event.target)
             .parents('.annotator-annotation')
@@ -343,6 +350,7 @@ var Viewer = exports.Viewer = Widget.extend({
         this.hide();
         this.options.onDelete(item);
     },
+    */
 
     // Event callback: called when a user triggers `mouseover` on a highlight
     // element.
@@ -449,18 +457,13 @@ Viewer.template = [
     '</div>'
 ].join('\n');
 
+// ams10961: remove edit/delete buttons
 Viewer.itemTemplate = [
     '<li class="annotator-annotation annotator-item">',
     '  <span class="annotator-controls">',
     '    <a href="#"',
     '       title="' + _t('View as webpage') + '"',
     '       class="annotator-link">' + _t('View as webpage') + '</a>',
-    '    <button type="button"',
-    '            title="' + _t('Edit') + '"',
-    '            class="annotator-edit">' + _t('Edit') + '</button>',
-    '    <button type="button"',
-    '            title="' + _t('Delete') + '"',
-    '            class="annotator-delete">' + _t('Delete') + '</button>',
     '  </span>',
     '</li>'
 ].join('\n');

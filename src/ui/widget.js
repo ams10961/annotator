@@ -112,6 +112,7 @@ Widget.prototype.checkOrientation = function () {
 */
 
 Widget.prototype.checkOrientation = function () {
+	
     this.resetOrientation();
 
     var $win = $(global),

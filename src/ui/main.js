@@ -232,15 +232,22 @@ function main(options) {
             }
         });
         s.adder.attach();
+        
+        s.highlighter = new highlighter.Highlighter(options.element);
 
         s.editor = new editor.Editor({
-            extensions: options.editorExtensions
+            extensions: options.editorExtensions,
+            // ams10961
+            onDelete: function (ann) {
+                s.highlighter.undraw(ann);
+                app.annotations['delete'](ann);
+            }
         });
         s.editor.attach();
 
         addPermissionsCheckboxes(s.editor, ident, authz);
 
-        s.highlighter = new highlighter.Highlighter(options.element);
+        // moved up, s.highlighter = new highlighter.Highlighter(options.element);
 
         s.textselector = new textselector.TextSelector(options.element, {
             onSelection: function (ranges, event) {
@@ -292,7 +299,7 @@ function main(options) {
         },
 
         annotationsLoaded: function (anns) { s.highlighter.drawAll(anns); },
-        // update to highlight during annotation
+        // ams10961:update to highlight during annotation
         annotationCreated: function (ann) { /* s.highlighter.draw(ann);*/ },
         annotationDeleted: function (ann) { s.highlighter.undraw(ann); },
         annotationUpdated: function (ann) { s.highlighter.redraw(ann); },
@@ -303,12 +310,12 @@ function main(options) {
             // here to "stall" the annotation process until the editing is
             // done.
 
-        	// highlight during annotaiton
+        	// ams10961:highlight during annotaiton
 	        s.highlighter.draw(annotation);
 	        
 	        return s.editor.load(annotation, s.interactionPoint)
 	        .catch( function (object) {
-	        	// remove highlighting for cancelled annotation
+	        	// ams10961:remove highlighting for cancelled annotation
 	        	s.highlighter.undraw(annotation);
 	        	throw object;
 	        });

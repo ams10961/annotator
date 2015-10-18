@@ -238,7 +238,7 @@ var Editor = exports.Editor = Widget.extend({
                 },
                 submit: function (field, annotation) {
                     annotation.text = $(field).find('textarea').val();
-                }
+                }            
             });
         }
 
@@ -253,7 +253,10 @@ var Editor = exports.Editor = Widget.extend({
             })
             .on("click." + NS, '.annotator-cancel', function (e) {
                 self._onCancelClick(e);
-            })
+            }) 
+            .on("click." + NS, '.annotator-delete', function (e) { // ams10961:added delete
+                self._onDeleteClick(e);
+            })            
             .on("mouseover." + NS, '.annotator-cancel', function (e) {
                 self._onCancelMouseover(e);
             })
@@ -286,7 +289,16 @@ var Editor = exports.Editor = Widget.extend({
                 left: position.left
             });
         }
-
+        
+        // ams10961:only show delete if annotation has an ID
+        var deleteButton = this.element.find('.annotator-delete');
+        if (this.annotation.id !== null && typeof this.annotation.id !== 'undefined') {
+        	deleteButton.show();
+        } else {
+        	deleteButton.hide();
+        }
+ 
+        // switch focus to save
         this.element
             .find('.annotator-save')
             .addClass(this.classes.focus);
@@ -346,6 +358,17 @@ var Editor = exports.Editor = Widget.extend({
         }
         this.hide();
     },
+    
+    // Public: deletes the annotation
+    //
+    // Returns itself.
+    del: function () {
+        if (this.options.onDelete) {
+        	this.options.onDelete(this.annotation);
+        }
+        this.hide();
+    },
+
 
     // Public: Adds an additional form field to the editor. Callbacks can be
     // provided to update the view and anotations on load and submission.
@@ -487,6 +510,17 @@ var Editor = exports.Editor = Widget.extend({
         preventEventDefault(event);
         this.cancel();
     },
+    
+    // ams10961:moved here from viewer
+    // Event callback: called when the delete button is clicked.
+    //
+    // event - An Event object.
+    //
+    // Returns nothing.
+    _onDeleteClick: function (event) {
+        preventEventDefault(event);
+        this.del();
+    },    
 
     // Event callback: called when a user mouses over the editor's cancel
     // button.
@@ -570,9 +604,9 @@ Editor.template = [
     '  <form class="annotator-widget">',
     '    <ul class="annotator-listing"></ul>',
     '    <div class="annotator-controls">',
+    '     <a class="annotator-delete">' + _t('Delete') + '</a>',    
     '     <a href="#cancel" class="annotator-cancel">' + _t('Cancel') + '</a>',
-    '      <a href="#save"',
-    '         class="annotator-save annotator-focus">' + _t('Save') + '</a>',
+    '     <a href="#save" class="annotator-save annotator-focus">' + _t('Save') + '</a>',
     '    </div>',
     '  </form>',
     '</div>'
