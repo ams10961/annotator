@@ -113,6 +113,8 @@ Widget.prototype.checkOrientation = function () {
 
 Widget.prototype.checkOrientation = function () {
 	
+	console.log('viewport, current');
+	
     this.resetOrientation();
 
     var $win = $(global),
@@ -120,36 +122,31 @@ Widget.prototype.checkOrientation = function () {
         offset = $widget.offset(),
         viewport = {
             top: $win.scrollTop(),
-            right: $win.width() + $win.scrollLeft(),
             left:$win.scrollLeft(),
-            width: $win.width(),
-    		centre: $win.scrollLeft() + ($win.width()/2)
+            right: $win.width() + $win.scrollLeft()
         },
-        current = {
+        widget = {
             top: offset.top,
-            right: offset.left + $widget.width(),
             left: offset.left,
+            right: offset.left + $widget.width(),
             width: $widget.width()
         };
+    
+    
+    // console.log(viewport);
+    // console.log(widget);
 
-    if (viewport.top > current.top) {
+    if (viewport.top > widget.top) {
         this.invertY();
     }
 
     // does widget right bound go beyond right edge of viewport?
-    if (current.right > viewport.right) {
-    	// is widget left offset > widget width 
-    	if (current.left > current.width) {
-    		this.invertX();
-    	} else {
-    		// no room to invert, so centre
-    		$widget.offset({top: $widget.offset.top, left: (viewport.centre - (current.width/2))});
-    		console.log('no room to invert, so centring');
-    	}
-    }
-    
-    if (current.left < window.left) {
-    	console.log('truncated before inversion?');
+    if (widget.right > viewport.right) {
+    	console.log('drifted off right side, so place at right extremity');
+    	$widget.offset({top: $widget.offset.top, left: (viewport.right - 10 - widget.width)});
+    } else if (widget.left < viewport.left) {
+    	console.log('drifted off left side, so place at left extremity');
+    	$widget.offset({top: $widget.offset.top, left: (viewport.left + 10)});
     }
 
     return this;
