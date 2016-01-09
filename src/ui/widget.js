@@ -113,8 +113,6 @@ Widget.prototype.checkOrientation = function () {
 
 Widget.prototype.checkOrientation = function () {
 	
-	console.log('viewport, current');
-	
     this.resetOrientation();
 
     var $win = $(global),
@@ -122,31 +120,53 @@ Widget.prototype.checkOrientation = function () {
         offset = $widget.offset(),
         viewport = {
             top: $win.scrollTop(),
-            left:$win.scrollLeft(),
-            right: $win.width() + $win.scrollLeft()
+            right: $win.width() + $win.scrollLeft(),
+            left: $win.scrollLeft(),
+            width: $win.width(),
+    		centre: $win.scrollLeft() + ($win.width()/2)
         },
-        widget = {
+        current = {
             top: offset.top,
-            left: offset.left,
             right: offset.left + $widget.width(),
+            left: offset.left,
             width: $widget.width()
         };
     
-    
-    // console.log(viewport);
-    // console.log(widget);
+    console.log(viewport);
+    console.log(current);
 
-    if (viewport.top > widget.top) {
+    if (viewport.top > current.top) {
+    	// console.log('inverting Y');
         this.invertY();
     }
 
     // does widget right bound go beyond right edge of viewport?
-    if (widget.right > viewport.right) {
-    	console.log('drifted off right side, so place at right extremity');
-    	$widget.offset({top: $widget.offset.top, left: (viewport.right - 10 - widget.width)});
-    } else if (widget.left < viewport.left) {
-    	console.log('drifted off left side, so place at left extremity');
-    	$widget.offset({top: $widget.offset.top, left: (viewport.left + 10)});
+    if (current.right > viewport.right) {
+    	// is widget left offset > widget width 
+    	if (current.left > current.width) {
+    		this.invertX();
+        	// console.log('inverting X');
+    	} else {
+    		// no room to invert, so centre
+    		// console.log('no room to invert, so centring');
+         	$widget.offset({top: $widget.offset.top, left: (viewport.width - (current.width/2))});
+    	}
+    }
+    
+    if (current.left < window.left) {
+    	// console.log('truncated before inversion?');
+    }
+    
+    // final checks - particularly for hovering comment.
+    
+    if (current.left < 0) {
+    	// console.log('off left hand side - fixing');
+    	$widget.offset({top: $widget.offset.top, left: 5});
+    }
+    
+    if (current.right > viewport.right) {
+    	// console.log('off right hand side - fixing');
+		$widget.offset({top: $widget.offset.top, left: (viewport.right - current.width - 5 )});
     }
 
     return this;

@@ -91,9 +91,8 @@
 /* Annotator Adder
 -------------------------------------------------------------------- */
 
-// ams10961: to avoid iphones safari context menus, lower annotate icon
 .annotator-adder {
-	margin-top: 48px;
+	margin-top: -48px;
 	margin-left: -24px;
 	width: 48px;
 	height: 48px;
